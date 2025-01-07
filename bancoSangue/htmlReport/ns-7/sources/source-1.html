@@ -1,0 +1,133 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Doadores</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">br.com.drs.bancosangue.model</a>
+</div>
+
+<h1>Coverage Summary for Class: Doadores (br.com.drs.bancosangue.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Doadores</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package br.com.drs.bancosangue.model;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonFormat;
+&nbsp;import jakarta.persistence.Entity;
+&nbsp;import jakarta.persistence.GeneratedValue;
+&nbsp;import jakarta.persistence.GenerationType;
+&nbsp;import jakarta.persistence.Id;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import lombok.Setter;
+&nbsp;import br.com.drs.bancosangue.model.enuns.Sexo;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;
+&nbsp;@Getter
+&nbsp;@Setter
+&nbsp;@AllArgsConstructor
+&nbsp;@NoArgsConstructor
+&nbsp;@Entity
+&nbsp;public class Doadores {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    private String nome;
+&nbsp;
+&nbsp;    private String cpf;
+&nbsp;
+&nbsp;    private String rg;
+&nbsp;
+&nbsp;    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = &quot;dd/MM/yyyy&quot;)
+&nbsp;    private LocalDate data_nasc;
+&nbsp;
+&nbsp;    private Sexo sexo;
+&nbsp;
+&nbsp;    private String mae;
+&nbsp;
+&nbsp;    private String pai;
+&nbsp;
+&nbsp;    private String email;
+&nbsp;
+&nbsp;    private String cep;
+&nbsp;
+&nbsp;    private String endereco;
+&nbsp;
+&nbsp;    private String numero;
+&nbsp;
+&nbsp;    private String bairro;
+&nbsp;
+&nbsp;    private String cidade;
+&nbsp;
+&nbsp;    private String estado;
+&nbsp;
+&nbsp;    private String telefone_fixo;
+&nbsp;
+&nbsp;    private String celular;
+&nbsp;
+&nbsp;    private float altura;
+&nbsp;
+&nbsp;    private float peso;
+&nbsp;
+&nbsp;    private String tipo_sanguineo;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-06 12:34</div>
+</div>
+</body>
+</html>

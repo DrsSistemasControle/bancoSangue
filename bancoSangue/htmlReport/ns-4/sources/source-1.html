@@ -1,0 +1,300 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DoadoresService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">br.com.drs.bancosangue.service</a>
+</div>
+
+<h1>Coverage Summary for Class: DoadoresService (br.com.drs.bancosangue.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DoadoresService</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/62)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DoadoresService$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/63)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package br.com.drs.bancosangue.service;
+&nbsp;
+&nbsp;import br.com.drs.bancosangue.model.Doadores;
+&nbsp;import br.com.drs.bancosangue.util.CompatibilidadeSanguinea;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import com.fasterxml.jackson.databind.DeserializationFeature;
+&nbsp;import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+&nbsp;import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+&nbsp;import com.fasterxml.jackson.core.type.TypeReference;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.IOException;
+&nbsp;import java.text.DecimalFormat;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.Period;
+&nbsp;import java.time.format.DateTimeFormatter;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+<b class="nc">&nbsp;public class DoadoresService extends GenericService&lt;Doadores, Long&gt; {</b>
+&nbsp;
+&nbsp;    @Value(&quot;${data.json.path}&quot;)
+&nbsp;    private String caminhoArquivo;
+&nbsp;
+&nbsp;    public void importarDados() throws IOException {
+<b class="nc">&nbsp;        ObjectMapper objectMapper = new ObjectMapper();</b>
+&nbsp;
+&nbsp;        // Configurar o suporte para datas no formato dd/MM/yyyy
+<b class="nc">&nbsp;        JavaTimeModule javaTimeModule = new JavaTimeModule();</b>
+<b class="nc">&nbsp;        javaTimeModule.addDeserializer(LocalDate.class,</b>
+<b class="nc">&nbsp;                new LocalDateDeserializer(DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;)));</b>
+<b class="nc">&nbsp;        objectMapper.registerModule(javaTimeModule);</b>
+&nbsp;
+&nbsp;        // Ignorar propriedades desconhecidas no JSON
+<b class="nc">&nbsp;        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);</b>
+&nbsp;
+&nbsp;        // Ler o arquivo JSON e mapear para a lista de doadores
+<b class="nc">&nbsp;        List&lt;Doadores&gt; doadores = objectMapper.readValue(</b>
+&nbsp;                new File(caminhoArquivo),
+<b class="nc">&nbsp;                new TypeReference&lt;List&lt;Doadores&gt;&gt;() {}</b>
+&nbsp;        );
+&nbsp;
+&nbsp;        // Salvar os doadores no banco
+<b class="nc">&nbsp;        doadores.forEach(this::salvar);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Map&lt;String, Long&gt; contarCandidatosPorEstado() {
+<b class="nc">&nbsp;        return listarTodos().stream()</b>
+<b class="nc">&nbsp;                .collect(Collectors.groupingBy(Doadores::getEstado, Collectors.counting()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Map&lt;String, String&gt; calcularImcMedioPorFaixaEtaria() {
+<b class="nc">&nbsp;        LocalDate hoje = LocalDate.now();</b>
+<b class="nc">&nbsp;        DecimalFormat decimalFormat = new DecimalFormat(&quot;#.##&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        return listarTodos().stream()</b>
+<b class="nc">&nbsp;                .collect(Collectors.groupingBy(</b>
+&nbsp;                        doador -&gt; {
+<b class="nc">&nbsp;                            int idade = Period.between(doador.getData_nasc(), hoje).getYears();</b>
+<b class="nc">&nbsp;                            int faixaInicio = (idade / 10) * 10;</b>
+<b class="nc">&nbsp;                            int faixaFim = faixaInicio + 9;</b>
+<b class="nc">&nbsp;                            return faixaInicio + &quot; a &quot; + faixaFim; // Ex.: &quot;21 a 30&quot;</b>
+&nbsp;                        },
+<b class="nc">&nbsp;                        Collectors.averagingDouble(doador -&gt; doador.getPeso() / Math.pow(doador.getAltura(), 2))</b>
+<b class="nc">&nbsp;                )).entrySet().stream()</b>
+<b class="nc">&nbsp;                .collect(Collectors.toMap(</b>
+&nbsp;                        Map.Entry::getKey,
+<b class="nc">&nbsp;                        entry -&gt; decimalFormat.format(entry.getValue())</b>
+&nbsp;                ));
+&nbsp;    }
+&nbsp;
+&nbsp;    public Map&lt;String, String&gt; calcularPercentualObesosPorSexo() {
+<b class="nc">&nbsp;        List&lt;Doadores&gt; doadores = listarTodos();</b>
+<b class="nc">&nbsp;        DecimalFormat decimalFormat = new DecimalFormat(&quot;#.##&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        return doadores.stream()</b>
+<b class="nc">&nbsp;                .collect(Collectors.groupingBy(</b>
+<b class="nc">&nbsp;                        doador -&gt; doador.getSexo().name(),</b>
+<b class="nc">&nbsp;                        Collectors.collectingAndThen(</b>
+<b class="nc">&nbsp;                                Collectors.toList(),</b>
+&nbsp;                                lista -&gt; {
+<b class="nc">&nbsp;                                    long total = lista.size();</b>
+<b class="nc">&nbsp;                                    long obesos = lista.stream()</b>
+<b class="nc">&nbsp;                                            .filter(d -&gt; d.getPeso() / Math.pow(d.getAltura(), 2) &gt; 30)</b>
+<b class="nc">&nbsp;                                            .count();</b>
+<b class="nc">&nbsp;                                    double percentual = total &gt; 0 ? (obesos * 100.0) / total : 0.0;</b>
+<b class="nc">&nbsp;                                    return decimalFormat.format(percentual) + &quot;%&quot;;</b>
+&nbsp;                                }
+&nbsp;                        )
+&nbsp;                ));
+&nbsp;    }
+&nbsp;
+&nbsp;    public Map&lt;String, String&gt; calcularMediaIdadePorTipoSanguineo() {
+<b class="nc">&nbsp;        LocalDate hoje = LocalDate.now();</b>
+<b class="nc">&nbsp;        DecimalFormat decimalFormat = new DecimalFormat(&quot;#.##&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        return listarTodos().stream()</b>
+<b class="nc">&nbsp;                .collect(Collectors.groupingBy(</b>
+&nbsp;                        Doadores::getTipo_sanguineo, // Agrupar pelo tipo sanguíneo
+<b class="nc">&nbsp;                        Collectors.averagingInt(doador -&gt; Period.between(doador.getData_nasc(), hoje).getYears()) // Calcular a média de idade</b>
+&nbsp;                ))
+<b class="nc">&nbsp;                .entrySet().stream()</b>
+<b class="nc">&nbsp;                .collect(Collectors.toMap(</b>
+&nbsp;                        Map.Entry::getKey,
+<b class="nc">&nbsp;                        entry -&gt; decimalFormat.format(entry.getValue()) // Formatar com 2 casas decimais</b>
+&nbsp;                ));
+&nbsp;    }
+&nbsp;
+&nbsp;    public Map&lt;String, Long&gt; calcularQuantidadeDoadoresParaCadaTipoSanguineo() {
+<b class="nc">&nbsp;        LocalDate hoje = LocalDate.now();</b>
+&nbsp;
+<b class="nc">&nbsp;        return listarTodos().stream()</b>
+<b class="nc">&nbsp;                .filter(doador -&gt; {</b>
+&nbsp;                    // Verificar idade (16 a 69 anos)
+<b class="nc">&nbsp;                    int idade = Period.between(doador.getData_nasc(), hoje).getYears();</b>
+<b class="nc">&nbsp;                    return idade &gt;= 16 &amp;&amp; idade &lt;= 69 &amp;&amp; doador.getPeso() &gt; 50; // Peso &gt; 50Kg</b>
+&nbsp;                })
+<b class="nc">&nbsp;                .collect(Collectors.groupingBy(</b>
+<b class="nc">&nbsp;                        doador -&gt; doador.getTipo_sanguineo(), // Agrupar por tipo sanguíneo do doador</b>
+<b class="nc">&nbsp;                        Collectors.counting() // Contar a quantidade de doadores por tipo sanguíneo</b>
+&nbsp;                ));
+&nbsp;    }
+&nbsp;
+&nbsp;    public Map&lt;String, Long&gt; calcularQuantidadeDoadoresPossiveisParaCadaReceptor() {
+<b class="nc">&nbsp;        return CompatibilidadeSanguinea.podeDoarPara.keySet().stream()  // Corrigido</b>
+<b class="nc">&nbsp;                .collect(Collectors.toMap(</b>
+<b class="nc">&nbsp;                        receptor -&gt; receptor,  // Receptor é o tipo sanguíneo</b>
+&nbsp;                        receptor -&gt; {
+&nbsp;                            // Filtra os doadores que podem doar para o tipo sanguíneo do receptor
+<b class="nc">&nbsp;                            Set&lt;String&gt; tiposCompativeis = CompatibilidadeSanguinea.podeDoarPara(receptor); // Alterado para usar o método certo</b>
+<b class="nc">&nbsp;                            return listarTodos().stream()</b>
+<b class="nc">&nbsp;                                    .filter(doador -&gt; tiposCompativeis.contains(doador.getTipo_sanguineo()))</b>
+<b class="nc">&nbsp;                                    .filter(doador -&gt; {</b>
+&nbsp;                                        // Verificar idade (16 a 69 anos) e peso
+<b class="nc">&nbsp;                                        int idade = Period.between(doador.getData_nasc(), LocalDate.now()).getYears();</b>
+<b class="nc">&nbsp;                                        return idade &gt;= 16 &amp;&amp; idade &lt;= 69 &amp;&amp; doador.getPeso() &gt; 50;</b>
+&nbsp;                                    })
+<b class="nc">&nbsp;                                    .count();</b>
+&nbsp;                        }
+&nbsp;                ));
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-06 12:34</div>
+</div>
+</body>
+</html>
